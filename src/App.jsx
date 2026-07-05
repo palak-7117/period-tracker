@@ -37,13 +37,28 @@ const SYMPTOM_LIST = [
   },
 ];
 
+const MONTHS = [
+  { value: '01', label: 'January' }, { value: '02', label: 'February' },
+  { value: '03', label: 'March' }, { value: '04', label: 'April' },
+  { value: '05', label: 'May' }, { value: '06', label: 'June' },
+  { value: '07', label: 'July' }, { value: '08', label: 'August' },
+  { value: '09', label: 'September' }, { value: '10', label: 'October' },
+  { value: '11', label: 'November' }, { value: '12', label: 'December' }
+];
+
+const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
+
 export default function App() {
-  // Onboarding States
+  // Onboarding Profile States
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [username, setUsername] = useState('');
   const [avgCycleDays, setAvgCycleDays] = useState(28);
-  const [lastStart, setLastStart] = useState('');
-  const [lastEnd, setLastEnd] = useState('');
+
+  // Dropdown Split Date Selectors
+  const [startMonth, setStartMonth] = useState('07');
+  const [startDay, setStartDay] = useState('01');
+  const [endMonth, setEndMonth] = useState('07');
+  const [endDay, setEndDay] = useState('05');
 
   // Main Dashboard States
   const [history, setHistory] = useState([]);
@@ -51,7 +66,6 @@ export default function App() {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [activeDate, setActiveDate] = useState(new Date());
 
-  // Load setup profiles or existing accounts
   useEffect(() => {
     const savedOnboarding = localStorage.getItem('user_onboarded');
     const savedName = localStorage.getItem('username');
@@ -66,7 +80,6 @@ export default function App() {
     }
   }, []);
 
-  // Update dynamic predictions based on history logs or user fallback
   useEffect(() => {
     if (history.length > 0) {
       const computedPredictions = calculateNextCycle(history);
@@ -89,18 +102,26 @@ export default function App() {
     }
   }, [history, isOnboarded, avgCycleDays]);
 
-  // Handle Form Submission on entry screen
   const handleOnboardingSubmit = (e) => {
     e.preventDefault();
-    if (!username || !lastStart || !lastEnd) {
-      alert('Please fill out all onboarding fields to personalize your dashboard.');
+    if (!username) {
+      alert('Please enter a username.');
       return;
     }
 
-    const start = new Date(lastStart);
-    const end = new Date(lastEnd);
-    const generatedHistory = [];
+    const currentYear = new Date().getFullYear();
+    const formattedStart = `${currentYear}-${startMonth}-${startDay}`;
+    const formattedEnd = `${currentYear}-${endMonth}-${endDay}`;
 
+    const start = new Date(formattedStart);
+    const end = new Date(formattedEnd);
+
+    if (end < start) {
+      alert('The end date cannot be earlier than your start date!');
+      return;
+    }
+
+    const generatedHistory = [];
     let current = new Date(start);
     while (current <= end) {
       generatedHistory.push(current.toISOString().split('T')[0]);
@@ -142,15 +163,12 @@ export default function App() {
     setPredictions(null);
     setUsername('');
     setAvgCycleDays(28);
-    setLastStart('');
-    setLastEnd('');
   };
 
   const activeDateString = new Date(activeDate.getTime() - (activeDate.getTimezoneOffset() * 60 * 1000))
     .toISOString()
     .split('T')[0];
 
-  // RENDER INTERACTIVE SETUP FORM IF NEW USER
   if (!isOnboarded) {
     return (
       <div className="mobile-container onboarding-mode">
@@ -184,22 +202,26 @@ export default function App() {
 
           <div className="form-group">
             <label>Start date of your last period?</label>
-            <input 
-              type="date" 
-              value={lastStart}
-              onChange={(e) => setLastStart(e.target.value)}
-              required 
-            />
+            <div className="dropdown-row">
+              <select value={startMonth} onChange={(e) => setStartMonth(e.target.value)}>
+                {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select value={startDay} onChange={(e) => setStartDay(e.target.value)}>
+                {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
           </div>
 
           <div className="form-group">
             <label>End date of your last period?</label>
-            <input 
-              type="date" 
-              value={lastEnd}
-              onChange={(e) => setLastEnd(e.target.value)}
-              required 
-            />
+            <div className="dropdown-row">
+              <select value={endMonth} onChange={(e) => setEndMonth(e.target.value)}>
+                {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select value={endDay} onChange={(e) => setEndDay(e.target.value)}>
+                {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
           </div>
 
           <button type="submit" className="btn-primary" style={{ marginTop: '20px' }}>
@@ -250,7 +272,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Dynamic Advice Display Window */}
         {selectedSymptoms.length > 0 && (
           <div className="advice-card">
             <h3>Care Tips For You</h3>
