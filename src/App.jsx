@@ -58,7 +58,7 @@ export default function App() {
     <div className="mobile-container">
       <header>
         <h1>Period Tracker</h1>
-        <p className="subtitle">Simple and trusted period calendar</p>
+        <p className="subtitle">simple and trusted period calendar</p>
       </header>
 
       <main style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
