@@ -52,13 +52,13 @@ export default function App() {
   // Onboarding Profile States
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [username, setUsername] = useState('');
-  const [avgCycleDays, setAvgCycleDays] = useState(28);
+  const [avgCycleDays, setAvgCycleDays] = useState(''); // Empty string for blank placeholder
 
-  // Dropdown Split Date Selectors
-  const [startMonth, setStartMonth] = useState('07');
-  const [startDay, setStartDay] = useState('01');
-  const [endMonth, setEndMonth] = useState('07');
-  const [endDay, setEndDay] = useState('05');
+  // Dropdown Split Date Selectors initialized as empty strings
+  const [startMonth, setStartMonth] = useState('');
+  const [startDay, setStartDay] = useState('');
+  const [endMonth, setEndMonth] = useState('');
+  const [endDay, setEndDay] = useState('');
 
   // Main Dashboard States
   const [history, setHistory] = useState([]);
@@ -83,7 +83,7 @@ export default function App() {
   useEffect(() => {
     if (history.length > 0) {
       const computedPredictions = calculateNextCycle(history);
-      const chosenCycleLength = parseInt(localStorage.getItem('avg_cycle_length') || avgCycleDays);
+      const chosenCycleLength = parseInt(localStorage.getItem('avg_cycle_length') || avgCycleDays || 28);
       
       if (computedPredictions && computedPredictions.averageLength > 10) {
         setPredictions(computedPredictions);
@@ -106,6 +106,14 @@ export default function App() {
     e.preventDefault();
     if (!username) {
       alert('Please enter a username.');
+      return;
+    }
+    if (!avgCycleDays) {
+      alert('Please enter your average cycle length.');
+      return;
+    }
+    if (!startMonth || !startDay || !endMonth || !endDay) {
+      alert('Please complete all month and day selections.');
       return;
     }
 
@@ -162,7 +170,11 @@ export default function App() {
     setHistory([]);
     setPredictions(null);
     setUsername('');
-    setAvgCycleDays(28);
+    setAvgCycleDays('');
+    setStartMonth('');
+    setStartDay('');
+    setEndMonth('');
+    setEndDay('');
   };
 
   const activeDateString = new Date(activeDate.getTime() - (activeDate.getTimezoneOffset() * 60 * 1000))
@@ -194,8 +206,9 @@ export default function App() {
               type="number" 
               min="20" 
               max="45" 
+              placeholder="e.g. 28"
               value={avgCycleDays}
-              onChange={(e) => setAvgCycleDays(parseInt(e.target.value) || 28)}
+              onChange={(e) => setAvgCycleDays(e.target.value === '' ? '' : parseInt(e.target.value))}
               required 
             />
           </div>
@@ -203,10 +216,12 @@ export default function App() {
           <div className="form-group">
             <label>Start date of your last period?</label>
             <div className="dropdown-row">
-              <select value={startMonth} onChange={(e) => setStartMonth(e.target.value)}>
+              <select value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required>
+                <option value="" disabled hidden>Month</option>
                 {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
               </select>
-              <select value={startDay} onChange={(e) => setStartDay(e.target.value)}>
+              <select value={startDay} onChange={(e) => setStartDay(e.target.value)} required>
+                <option value="" disabled hidden>Day</option>
                 {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
@@ -215,10 +230,12 @@ export default function App() {
           <div className="form-group">
             <label>End date of your last period?</label>
             <div className="dropdown-row">
-              <select value={endMonth} onChange={(e) => setEndMonth(e.target.value)}>
+              <select value={endMonth} onChange={(e) => setEndMonth(e.target.value)} required>
+                <option value="" disabled hidden>Month</option>
                 {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
               </select>
-              <select value={endDay} onChange={(e) => setEndDay(e.target.value)}>
+              <select value={endDay} onChange={(e) => setEndDay(e.target.value)} required>
+                <option value="" disabled hidden>Day</option>
                 {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
