@@ -148,7 +148,7 @@ h1 {
 }
 
 .symptoms-section {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .symptoms-section h4 {
@@ -198,6 +198,40 @@ h1 {
   font-size: 1.3rem;
 }
 
+/* Beautiful Interactive Advice Display Box styling */
+.advice-card {
+  background: #ffffff;
+  border: 1px solid rgba(184, 93, 67, 0.15);
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.advice-card h3 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: 1rem;
+  color: var(--terracotta);
+  border-bottom: 1px dashed rgba(43, 23, 20, 0.1);
+  padding-bottom: 6px;
+}
+
+.advice-item {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .calendar-card {
   background: #ffffff;
   border-radius: 28px;
@@ -212,7 +246,6 @@ h1 {
   border: none !important;
   width: 100% !important;
   background: transparent !important;
-  /* Forces numbers inside the calendar to render with beautiful aesthetic serifs */
   font-family: "Playfair Display", serif !important;
 }
 

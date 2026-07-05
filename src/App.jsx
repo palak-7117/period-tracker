@@ -5,11 +5,36 @@ import { calculateNextCycle } from './utils/cycleEngine';
 import './App.css';
 
 const SYMPTOM_LIST = [
-  { id: 'cramps', label: 'Cramps', icon: '⚡' },
-  { id: 'headache', label: 'Headache', icon: '🤕' },
-  { id: 'bloating', label: 'Bloating', icon: '🎈' },
-  { id: 'tired', label: 'Fatigue', icon: '🥱' },
-  { id: 'happy', label: 'Happy', icon: '☀️' },
+  { 
+    id: 'cramps', 
+    label: 'Cramps', 
+    icon: '⚡',
+    advice: 'Rest with a warm heating pad, sip chamomile tea, or try gentle stretches like child\'s pose to soothe pelvic muscles.' 
+  },
+  { 
+    id: 'headache', 
+    label: 'Headache', 
+    icon: '🤕',
+    advice: 'Dim the lights, stay well hydrated with water, and take a small break from phone and laptop screens.' 
+  },
+  { 
+    id: 'bloating', 
+    label: 'Bloating', 
+    icon: '🎈',
+    advice: 'Eat smaller meals slowly, avoid carbonated drinks, and enjoy a warm mug of peppermint or ginger tea.' 
+  },
+  { 
+    id: 'tired', 
+    label: 'Fatigue', 
+    icon: '🥱',
+    advice: 'Listen to your body and rest. Avoid heavy tasks today, and prioritize a relaxing night of deep sleep.' 
+  },
+  { 
+    id: 'happy', 
+    label: 'Happy', 
+    icon: '☀️',
+    advice: 'Ride that high energy wave! It’s a wonderful day for your favorite creative project, social time, or a fun workout.' 
+  },
 ];
 
 export default function App() {
@@ -47,12 +72,9 @@ export default function App() {
       const computedPredictions = calculateNextCycle(history);
       const chosenCycleLength = parseInt(localStorage.getItem('avg_cycle_length') || avgCycleDays);
       
-      // If the engine calculates a realistic cycle length (> 10 days), use it.
-      // Otherwise, fall back to your custom onboarding cycle entry!
       if (computedPredictions && computedPredictions.averageLength > 10) {
         setPredictions(computedPredictions);
       } else {
-        // Fallback calculation using the first day of the last period
         const nextStart = new Date(history[0]); 
         nextStart.setDate(nextStart.getDate() + chosenCycleLength);
         
@@ -75,7 +97,6 @@ export default function App() {
       return;
     }
 
-    // Generate explicit date sequences from the user's input window
     const start = new Date(lastStart);
     const end = new Date(lastEnd);
     const generatedHistory = [];
@@ -86,7 +107,6 @@ export default function App() {
       current.setDate(current.getDate() + 1);
     }
 
-    // Save configurations permanently to local state
     localStorage.setItem('user_onboarded', 'true');
     localStorage.setItem('username', username);
     localStorage.setItem('avg_cycle_length', avgCycleDays.toString());
@@ -190,7 +210,6 @@ export default function App() {
     );
   }
 
-  // RENDER MAIN DASHBOARD ONCE SET UP LOGS MATCH
   return (
     <div className="mobile-container">
       <header>
@@ -230,6 +249,18 @@ export default function App() {
             ))}
           </div>
         </div>
+
+        {/* Dynamic Advice Display Window */}
+        {selectedSymptoms.length > 0 && (
+          <div className="advice-card">
+            <h3>Care Tips For You</h3>
+            {SYMPTOM_LIST.filter(s => selectedSymptoms.includes(s.id)).map(s => (
+              <div key={s.id} className="advice-item">
+                <strong>{s.icon} {s.label}:</strong> {s.advice}
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="calendar-card">
           <Calendar 
