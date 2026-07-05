@@ -11,8 +11,8 @@
 body {
   background: var(--bg-gradient);
   margin: 0;
-  /* Updated to Plus Jakarta Sans for a clean, modern aesthetic */
-  font-family: "Plus Jakarta Sans", sans-serif;
+  /* Set to Playfair Display for aesthetic typography and charming traditional numbers */
+  font-family: "Playfair Display", serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -57,7 +57,6 @@ body {
 }
 
 .form-group label {
-  /* Playfair Display for a charming touch on headers */
   font-family: "Playfair Display", serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -65,7 +64,7 @@ body {
 }
 
 .form-group input {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Playfair Display", serif;
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(43, 23, 20, 0.2);
@@ -86,7 +85,6 @@ header {
 }
 
 h1 {
-  /* Playfair Display for an elegant main title branding */
   font-family: "Playfair Display", serif;
   font-size: 2.2rem;
   font-weight: 700;
@@ -214,10 +212,12 @@ h1 {
   border: none !important;
   width: 100% !important;
   background: transparent !important;
-  font-family: "Plus Jakarta Sans", sans-serif !important;
+  /* Forces numbers inside the calendar to render with beautiful aesthetic serifs */
+  font-family: "Playfair Display", serif !important;
 }
 
 .react-calendar__navigation button {
+  font-family: "Playfair Display", serif !important;
   color: var(--text-dark) !important;
   font-weight: bold !important;
   font-size: 1.1rem !important;
@@ -276,7 +276,7 @@ h1 {
 }
 
 .btn-primary {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Playfair Display", serif;
   background: var(--text-dark);
   color: var(--screen-beige);
   border: none;
@@ -295,7 +295,7 @@ h1 {
 }
 
 .btn-clear {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Playfair Display", serif;
   background: transparent;
   color: var(--text-dark);
   opacity: 0.6;
